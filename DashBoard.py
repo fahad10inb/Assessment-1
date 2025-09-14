@@ -57,7 +57,7 @@ DESIGN_SYSTEM = {
     'font_mono': "'JetBrains Mono', 'Courier New', monospace",
 }
 
-# 🎨 COMPLETE CSS WITH ENHANCED DATE PICKER
+# Complete CSS (same as before)
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap');
@@ -234,9 +234,6 @@ st.markdown(f"""
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }}
     
-    /* 🔧 ENHANCED WIDGET STYLING */
-    
-    /* Selectbox styling */
     .stSelectbox > div > div {{
         background-color: {DESIGN_SYSTEM['background_secondary']} !important;
         border: 1px solid {DESIGN_SYSTEM['border']} !important;
@@ -250,7 +247,6 @@ st.markdown(f"""
         border-color: {DESIGN_SYSTEM['primary']} !important;
     }}
     
-    /* Enhanced Multiselect Styling */
     .stMultiSelect > div > div {{
         background-color: {DESIGN_SYSTEM['background_secondary']} !important;
         border: 1px solid {DESIGN_SYSTEM['border']} !important;
@@ -260,7 +256,6 @@ st.markdown(f"""
         overflow-y: auto !important;
     }}
     
-    /* Multiselect tags - Compact & Clean */
     span[data-baseweb="tag"] {{
         background-color: {DESIGN_SYSTEM['surface_elevated']} !important;
         color: {DESIGN_SYSTEM['text_primary']} !important;
@@ -287,7 +282,6 @@ st.markdown(f"""
         text-overflow: ellipsis !important;
     }}
     
-    /* Tag close button */
     span[data-baseweb="tag"] svg {{
         fill: {DESIGN_SYSTEM['text_secondary']} !important;
         width: 12px !important;
@@ -299,7 +293,6 @@ st.markdown(f"""
         fill: {DESIGN_SYSTEM['error']} !important;
     }}
     
-    /* Multiselect dropdown */
     div[data-baseweb="select"] > div {{
         background-color: {DESIGN_SYSTEM['background_secondary']} !important;
         border: 1px solid {DESIGN_SYSTEM['border']} !important;
@@ -310,7 +303,6 @@ st.markdown(f"""
         border-color: {DESIGN_SYSTEM['primary']} !important;
     }}
     
-    /* Dropdown options */
     div[role="listbox"] {{
         background-color: {DESIGN_SYSTEM['background_secondary']} !important;
         border: 1px solid {DESIGN_SYSTEM['border']} !important;
@@ -336,7 +328,6 @@ st.markdown(f"""
         color: white !important;
     }}
     
-    /* 🔧 ENHANCED DATE PICKER FIXES - FINAL VERSION */
     div[data-testid="stDateInput"] {{
         width: 100% !important;
     }}
@@ -354,13 +345,11 @@ st.markdown(f"""
         background: transparent !important;
     }}
     
-    /* Remove any background from date input container */
     div[data-testid="stDateInput"] > div > div > div {{
         background: transparent !important;
         width: 100% !important;
     }}
     
-    /* Style the actual input field */
     div[data-testid="stDateInput"] input {{
         background-color: {DESIGN_SYSTEM['background_secondary']} !important;
         color: {DESIGN_SYSTEM['text_primary']} !important;
@@ -385,7 +374,6 @@ st.markdown(f"""
         border-color: {DESIGN_SYSTEM['primary_light']} !important;
     }}
     
-    /* Style the calendar button */
     div[data-testid="stDateInput"] button {{
         background: transparent !important;
         border: none !important;
@@ -402,7 +390,6 @@ st.markdown(f"""
         background-color: rgba(79, 146, 255, 0.15) !important;
     }}
     
-    /* Calendar icon styling */
     div[data-testid="stDateInput"] svg {{
         fill: {DESIGN_SYSTEM['text_secondary']} !important;
         width: 18px !important;
@@ -414,17 +401,14 @@ st.markdown(f"""
         fill: {DESIGN_SYSTEM['primary']} !important;
     }}
     
-    /* Ensure no extra containers have backgrounds */
     div[data-testid="stDateInput"] * {{
         box-sizing: border-box !important;
     }}
     
-    /* Fix any remaining backgrounds */
     div[data-testid="stDateInput"] div[role="button"] {{
         background: transparent !important;
     }}
     
-    /* Enhanced Calendar popup styling */
     div[data-baseweb="calendar"] {{
         background-color: {DESIGN_SYSTEM['background_secondary']} !important;
         border: 1px solid {DESIGN_SYSTEM['border']} !important;
@@ -461,7 +445,6 @@ st.markdown(f"""
         box-shadow: 0 4px 8px rgba(79, 146, 255, 0.3) !important;
     }}
     
-    /* Calendar navigation buttons */
     div[data-baseweb="calendar"] button[aria-label*="previous"],
     div[data-baseweb="calendar"] button[aria-label*="next"] {{
         background: transparent !important;
@@ -476,7 +459,6 @@ st.markdown(f"""
         transform: scale(1.1) !important;
     }}
     
-    /* Calendar month/year header */
     div[data-baseweb="calendar"] div[role="heading"] {{
         color: {DESIGN_SYSTEM['text_primary']} !important;
         font-weight: 700 !important;
@@ -484,13 +466,11 @@ st.markdown(f"""
         margin-bottom: 1rem !important;
     }}
     
-    /* Hide default Streamlit elements */
     #MainMenu {{visibility: hidden;}}
     .stDeployButton {{display: none;}}
     footer {{visibility: hidden;}}
     .stApp > header {{visibility: hidden;}}
     
-    /* Custom scrollbar */
     ::-webkit-scrollbar {{
         width: 8px;
         height: 8px;
@@ -573,8 +553,87 @@ def safe_plotly_chart(fig, **kwargs):
     except Exception as e:
         st.error(f"Chart rendering error: {str(e)}")
 
+def get_platform_columns(df, selected_platforms):
+    """Get the actual column names for selected platforms"""
+    platform_map = {
+        'Facebook': 'facebook',
+        'Google': 'google', 
+        'TikTok': 'tiktok'
+    }
+    
+    selected_keys = [platform_map.get(platform) for platform in selected_platforms if platform in platform_map]
+    
+    spend_cols = [f'{key}_spend' for key in selected_keys if f'{key}_spend' in df.columns]
+    revenue_cols = [f'{key}_attributed revenue' for key in selected_keys if f'{key}_attributed revenue' in df.columns]
+    clicks_cols = [f'{key}_clicks' for key in selected_keys if f'{key}_clicks' in df.columns]
+    impression_cols = [f'{key}_impression' for key in selected_keys if f'{key}_impression' in df.columns]
+    
+    return spend_cols, revenue_cols, clicks_cols, impression_cols
+
+def filter_data_by_platforms(df, selected_platforms):
+    """Filter and recalculate data based on selected platforms"""
+    if df.empty or not selected_platforms:
+        return df.copy()
+    
+    # Get platform-specific columns
+    spend_cols, revenue_cols, clicks_cols, impression_cols = get_platform_columns(df, selected_platforms)
+    
+    # Create filtered dataframe
+    filtered_df = df.copy()
+    
+    # Recalculate aggregated metrics based on selected platforms only
+    if spend_cols:
+        filtered_df['spend'] = filtered_df[spend_cols].sum(axis=1)
+    else:
+        filtered_df['spend'] = 0
+        
+    if revenue_cols:
+        filtered_df['attributed revenue'] = filtered_df[revenue_cols].sum(axis=1)
+    else:
+        filtered_df['attributed revenue'] = 0
+        
+    if clicks_cols:
+        filtered_df['clicks'] = filtered_df[clicks_cols].sum(axis=1)
+    else:
+        filtered_df['clicks'] = 0
+        
+    if impression_cols:
+        filtered_df['impression'] = filtered_df[impression_cols].sum(axis=1)
+    else:
+        filtered_df['impression'] = 0
+    
+    # Recalculate ROAS
+    filtered_df['marketing_roas'] = np.where(
+        filtered_df['spend'] > 0,
+        filtered_df['attributed revenue'] / filtered_df['spend'],
+        0
+    )
+    
+    # Recalculate attribution rate
+    filtered_df['attribution_rate'] = np.where(
+        filtered_df['total revenue'] > 0,
+        filtered_df['attributed revenue'] / filtered_df['total revenue'],
+        0
+    )
+    
+    return filtered_df
+
 def calculate_kpis(df):
-    """Calculate KPIs based on actual dataset columns"""
+    """Calculate KPIs based on filtered dataset"""
+    if df.empty:
+        return {
+            'total_revenue': 0,
+            'total_orders': 0,
+            'total_new_customers': 0,
+            'total_spend': 0,
+            'avg_roas': 0,
+            'avg_profit_margin': 0,
+            'revenue_growth': 0,
+            'customer_growth': 0,
+            'cac': 0,
+            'aov': 0
+        }
+    
     total_revenue = df['total revenue'].sum()
     total_orders = df['# of orders'].sum()
     total_new_customers = df['new customers'].sum()
@@ -585,23 +644,23 @@ def calculate_kpis(df):
     # Growth calculations
     df_sorted = df.sort_values('date')
     mid_point = len(df_sorted) // 2
-    first_half = df_sorted.iloc[:mid_point]
-    second_half = df_sorted.iloc[mid_point:]
     
-    # Revenue growth
-    first_half_revenue = first_half['total revenue'].sum()
-    second_half_revenue = second_half['total revenue'].sum()
-    revenue_growth = ((second_half_revenue - first_half_revenue) / first_half_revenue * 100) if first_half_revenue > 0 else 0
+    if mid_point > 0:
+        first_half = df_sorted.iloc[:mid_point]
+        second_half = df_sorted.iloc[mid_point:]
+        
+        first_half_revenue = first_half['total revenue'].sum()
+        second_half_revenue = second_half['total revenue'].sum()
+        revenue_growth = ((second_half_revenue - first_half_revenue) / first_half_revenue * 100) if first_half_revenue > 0 else 0
+        
+        first_half_customers = first_half['new customers'].sum()
+        second_half_customers = second_half['new customers'].sum()
+        customer_growth = ((second_half_customers - first_half_customers) / first_half_customers * 100) if first_half_customers > 0 else 0
+    else:
+        revenue_growth = 0
+        customer_growth = 0
     
-    # Customer acquisition growth
-    first_half_customers = first_half['new customers'].sum()
-    second_half_customers = second_half['new customers'].sum()
-    customer_growth = ((second_half_customers - first_half_customers) / first_half_customers * 100) if first_half_customers > 0 else 0
-    
-    # Customer Acquisition Cost (CAC)
     cac = total_spend / total_new_customers if total_new_customers > 0 else 0
-    
-    # Average Order Value
     aov = total_revenue / total_orders if total_orders > 0 else 0
     
     return {
@@ -618,22 +677,9 @@ def calculate_kpis(df):
     }
 
 def render_sidebar(df):
-    """Enhanced sidebar with perfect date picker styling"""
+    """Sidebar with functional platform filtering"""
     with st.sidebar:
-        # Custom branding at the top
-        st.markdown("""
-        <div style='text-align: center; padding: 1rem 0; margin-bottom: 1rem;'>
-            <h1 style='color: #4f92ff; font-size: 1.4rem; margin: 0; font-weight: 700;'>
-                📊 MARKETING HUB
-            </h1>
-            <p style='color: #a1a1aa; font-size: 0.8rem; margin: 0;'>
-                Intelligence Dashboard
-            </p>
-        </div>
-        <hr style='margin: 1rem 0; border: 1px solid #404040; opacity: 0.3;'>
-        """, unsafe_allow_html=True)
-        
-        # Enhanced Date Range with perfect styling
+        # Date Range
         date_range = st.date_input(
             "📅 Select Period",
             value=(df['date'].min(), df['date'].max()),
@@ -642,53 +688,79 @@ def render_sidebar(df):
             format="YYYY/MM/DD"
         )
         
-        # Enhanced Platform Selection
+        # Platform Selection
         platforms = st.multiselect(
             "🎯 Platforms",
             options=['Facebook', 'Google', 'TikTok'],
             default=['Facebook', 'Google', 'TikTok'],
-            help="Select marketing platforms to analyze"
+            help="Filter data to show only selected platforms"
         )
+        
+        # Show platform filter status
+        if not platforms:
+            st.error("❌ No platforms selected - please select at least one platform")
+            return date_range, platforms
         
         st.markdown("---")
         
-        # Clean metrics display
-        if len(df) > 0:
-            kpis = calculate_kpis(df)
-            
-            st.markdown(f"""
-            <div class="clean-stat">
-                Revenue: <span class="stat-value">${kpis['total_revenue']:,.0f}</span>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown(f"""
-            <div class="clean-stat">
-                ROAS: <span class="stat-value">{kpis['avg_roas']:.1f}x</span>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown(f"""
-            <div class="clean-stat">
-                New Customers: <span class="stat-value">{kpis['total_new_customers']:,}</span>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown(f"""
-            <div class="clean-stat">
-                CAC: <span class="stat-value">${kpis['cac']:.2f}</span>
-            </div>
-            """, unsafe_allow_html=True)
+        # Apply date filtering first
+        if len(date_range) == 2:
+            date_filtered_df = df[
+                (df['date'] >= pd.to_datetime(date_range[0])) & 
+                (df['date'] <= pd.to_datetime(date_range[1]))
+            ].copy()
+        else:
+            date_filtered_df = df.copy()
+        
+        # Apply platform filtering
+        filtered_df = filter_data_by_platforms(date_filtered_df, platforms)
+        
+        # Calculate and display metrics for filtered data
+        kpis = calculate_kpis(filtered_df)
+        
+        st.markdown(f"""
+        <div class="clean-stat">
+            Revenue: <span class="stat-value">${kpis['total_revenue']:,.0f}</span>
+            <br><small style="color: #a1a1aa;">From: {', '.join(platforms)}</small>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div class="clean-stat">
+            Marketing Spend: <span class="stat-value">${kpis['total_spend']:,.0f}</span>
+            <br><small style="color: #a1a1aa;">Selected platforms</small>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div class="clean-stat">
+            ROAS: <span class="stat-value">{kpis['avg_roas']:.1f}x</span>
+            <br><small style="color: #a1a1aa;">Platform average</small>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div class="clean-stat">
+            New Customers: <span class="stat-value">{kpis['total_new_customers']:,}</span>
+            <br><small style="color: #a1a1aa;">Total acquired</small>
+        </div>
+        """, unsafe_allow_html=True)
         
         return date_range, platforms
 
-def executive_summary(df):
-    """Executive Summary with key business metrics"""
+def executive_summary(df, selected_platforms):
+    """Executive Summary with platform-filtered data"""
     st.markdown('<div class="section-header">📈 Executive Summary</div>', unsafe_allow_html=True)
+    
+    if df.empty:
+        st.warning("No data available for the selected filters.")
+        return
+    
+    st.info(f"📊 Showing data for: **{', '.join(selected_platforms)}**")
     
     kpis = calculate_kpis(df)
     
-    # Enhanced KPI Cards
+    # KPI Cards
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
@@ -705,9 +777,9 @@ def executive_summary(df):
     with col2:
         st.markdown(f'''
         <div class="metric-card">
-            <div class="metric-label">👥 New Customers</div>
-            <div class="metric-value">{kpis['total_new_customers']:,.0f}</div>
-            <div class="metric-delta positive">🚀 {kpis['customer_growth']:+.1f}%</div>
+            <div class="metric-label">💸 Marketing Spend</div>
+            <div class="metric-value">${kpis['total_spend']:,.0f}</div>
+            <div class="metric-delta neutral">Selected Platforms</div>
         </div>
         ''', unsafe_allow_html=True)
     
@@ -716,26 +788,25 @@ def executive_summary(df):
         <div class="metric-card">
             <div class="metric-label">🎯 Marketing ROAS</div>
             <div class="metric-value">{kpis['avg_roas']:.2f}x</div>
-            <div class="metric-delta positive">💎 Return on Ad Spend</div>
+            <div class="metric-delta positive">Platform Average</div>
         </div>
         ''', unsafe_allow_html=True)
     
     with col4:
         st.markdown(f'''
         <div class="metric-card">
-            <div class="metric-label">💎 Avg Order Value</div>
-            <div class="metric-value">${kpis['aov']:.2f}</div>
-            <div class="metric-delta neutral">💰 Per Order</div>
+            <div class="metric-label">👥 New Customers</div>
+            <div class="metric-value">{kpis['total_new_customers']:,.0f}</div>
+            <div class="metric-delta positive">🚀 {kpis['customer_growth']:+.1f}%</div>
         </div>
         ''', unsafe_allow_html=True)
     
-    # Performance Trends
+    # Performance Trends with filtered data
     st.markdown('<div class="section-header">📊 Performance Trends</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
     with col1:
-        # Daily Revenue Trend
         fig = go.Figure()
         fig.add_trace(go.Scatter(
             x=df['date'],
@@ -754,25 +825,19 @@ def executive_summary(df):
         safe_plotly_chart(fig, use_container_width=True)
     
     with col2:
-        # New Customers vs Orders
         fig = go.Figure()
         fig.add_trace(go.Scatter(
             x=df['date'],
-            y=df['new customers'],
+            y=df['spend'],
             mode='lines',
-            name='New Customers',
-            line=dict(color=DESIGN_SYSTEM['success'], width=3)
-        ))
-        fig.add_trace(go.Scatter(
-            x=df['date'],
-            y=df['# of new orders'],
-            mode='lines',
-            name='New Orders',
-            line=dict(color=DESIGN_SYSTEM['secondary'], width=3)
+            name='Marketing Spend',
+            line=dict(color=DESIGN_SYSTEM['warning'], width=3),
+            fill='tonexty',
+            fillcolor=f"rgba(240, 179, 11, 0.1)"
         ))
         
         fig.update_layout(
-            title="👥 Customer & Order Acquisition",
+            title=f"💸 Marketing Spend ({', '.join(selected_platforms)})",
             hovermode='x unified'
         )
         safe_plotly_chart(fig, use_container_width=True)
@@ -781,10 +846,15 @@ def revenue_profitability(df, platforms):
     """Revenue and Profitability Analysis"""
     st.markdown('<div class="section-header">💰 Revenue & Profitability Analysis</div>', unsafe_allow_html=True)
     
+    if df.empty:
+        st.warning("No data available for the selected filters.")
+        return
+    
+    st.info(f"📊 Platform spend data for: **{', '.join(platforms)}**")
+    
     col1, col2 = st.columns(2)
     
     with col1:
-        # Revenue vs Gross Profit
         fig = go.Figure()
         fig.add_trace(go.Bar(
             x=df['date'],
@@ -795,25 +865,24 @@ def revenue_profitability(df, platforms):
         ))
         fig.add_trace(go.Bar(
             x=df['date'],
-            y=df['gross profit'],
-            name='Gross Profit',
-            marker_color=DESIGN_SYSTEM['success']
+            y=df['spend'],
+            name=f'Marketing Spend ({", ".join(platforms)})',
+            marker_color=DESIGN_SYSTEM['warning']
         ))
         
         fig.update_layout(
-            title="💰 Revenue vs Gross Profit", 
+            title="💰 Revenue vs Marketing Spend", 
             barmode='group',
             hovermode='x unified'
         )
         safe_plotly_chart(fig, use_container_width=True)
     
     with col2:
-        # Profit Margin Trend
         fig = px.line(
             df, 
             x='date', 
-            y='profit_margin',
-            title="📊 Profit Margin Trend"
+            y='marketing_roas',
+            title=f"📊 ROAS Trend ({', '.join(platforms)})"
         )
         fig.update_traces(
             line=dict(color=DESIGN_SYSTEM['success'], width=3),
@@ -826,10 +895,11 @@ def customer_acquisition_analysis(df):
     """Customer Acquisition Analysis"""
     st.markdown('<div class="section-header">👥 Customer Acquisition Analysis</div>', unsafe_allow_html=True)
     
-    # Calculate key customer metrics
-    total_spend = df['spend'].sum()
-    total_new_customers = df['new customers'].sum()
-    cac = total_spend / total_new_customers if total_new_customers > 0 else 0
+    if df.empty:
+        st.warning("No data available for the selected filters.")
+        return
+    
+    kpis = calculate_kpis(df)
     
     col1, col2, col3 = st.columns(3)
     
@@ -837,7 +907,7 @@ def customer_acquisition_analysis(df):
         st.markdown(f'''
         <div class="metric-card">
             <div class="metric-label">💸 Customer Acquisition Cost</div>
-            <div class="metric-value">${cac:.2f}</div>
+            <div class="metric-value">${kpis['cac']:.2f}</div>
             <div class="metric-delta neutral">Per Customer</div>
         </div>
         ''', unsafe_allow_html=True)
@@ -862,7 +932,6 @@ def customer_acquisition_analysis(df):
         </div>
         ''', unsafe_allow_html=True)
     
-    # Customer acquisition trends
     col1, col2 = st.columns(2)
     
     with col1:
@@ -876,56 +945,84 @@ def customer_acquisition_analysis(df):
         safe_plotly_chart(fig, use_container_width=True)
     
     with col2:
-        # CAC trend over time
         df_temp = df.copy()
-        df_temp['daily_cac'] = df_temp['spend'] / df_temp['new customers']
-        df_temp['daily_cac'] = df_temp['daily_cac'].replace([np.inf, -np.inf], 0)
+        df_temp['daily_cac'] = np.where(
+            df_temp['new customers'] > 0,
+            df_temp['spend'] / df_temp['new customers'],
+            0
+        )
         
         fig = px.line(
             df_temp,
             x='date',
             y='daily_cac',
-            title='💸 Customer Acquisition Cost Trend'
+            title='💸 Daily CAC Trend'
         )
         fig.update_traces(line=dict(color=DESIGN_SYSTEM['warning'], width=3))
         safe_plotly_chart(fig, use_container_width=True)
 
-def platform_performance(df):
+def platform_performance(df, selected_platforms):
     """Platform Performance Analysis"""
     st.markdown('<div class="section-header">📱 Platform Performance Analysis</div>', unsafe_allow_html=True)
     
-    # Platform metrics calculation
-    platforms = ['facebook', 'google', 'tiktok']
+    if df.empty:
+        st.warning("No data available for the selected filters.")
+        return
+    
+    # Get platform-specific performance for selected platforms only
+    platform_map = {
+        'Facebook': 'facebook',
+        'Google': 'google',
+        'TikTok': 'tiktok'
+    }
+    
     platform_data = []
     
-    for platform in platforms:
-        spend = df[f'{platform}_spend'].sum()
-        revenue = df[f'{platform}_attributed revenue'].sum()
-        clicks = df[f'{platform}_clicks'].sum()
-        impressions = df[f'{platform}_impression'].sum()
+    for platform_name in selected_platforms:
+        platform_key = platform_map.get(platform_name)
+        if not platform_key:
+            continue
+            
+        spend_col = f'{platform_key}_spend'
+        revenue_col = f'{platform_key}_attributed revenue'
+        clicks_col = f'{platform_key}_clicks'
+        impressions_col = f'{platform_key}_impression'
         
-        roas = revenue / spend if spend > 0 else 0
-        ctr = (clicks / impressions * 100) if impressions > 0 else 0
-        cpc = spend / clicks if clicks > 0 else 0
+        # Check if columns exist
+        required_cols = [spend_col, revenue_col, clicks_col, impressions_col]
+        if not all(col in df.columns for col in required_cols):
+            continue
         
-        platform_data.append({
-            'Platform': platform.title(),
-            'Spend': spend,
-            'Revenue': revenue,
-            'ROAS': roas,
-            'CTR': ctr,
-            'CPC': cpc,
-            'Clicks': clicks,
-            'Impressions': impressions
-        })
+        spend = df[spend_col].sum()
+        revenue = df[revenue_col].sum()
+        clicks = df[clicks_col].sum()
+        impressions = df[impressions_col].sum()
+        
+        if spend > 0:  # Only include platforms with spend
+            roas = revenue / spend
+            ctr = (clicks / impressions * 100) if impressions > 0 else 0
+            cpc = spend / clicks if clicks > 0 else 0
+            
+            platform_data.append({
+                'Platform': platform_name,
+                'Spend': spend,
+                'Revenue': revenue,
+                'ROAS': roas,
+                'CTR': ctr,
+                'CPC': cpc,
+                'Clicks': clicks,
+                'Impressions': impressions
+            })
+    
+    if not platform_data:
+        st.info("No platform performance data available for selected platforms.")
+        return
     
     # Platform comparison cards
-    col1, col2, col3 = st.columns(3)
+    cols = st.columns(len(platform_data))
     
     for i, platform_info in enumerate(platform_data):
-        col = [col1, col2, col3][i]
-        
-        with col:
+        with cols[i]:
             st.markdown(f'''
             <div class="metric-card">
                 <div class="metric-label">📱 {platform_info['Platform']}</div>
@@ -937,53 +1034,55 @@ def platform_performance(df):
             </div>
             ''', unsafe_allow_html=True)
     
-    # Platform performance charts
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        # Revenue attribution pie chart
-        fig = px.pie(
-            values=[p['Revenue'] for p in platform_data],
-            names=[p['Platform'] for p in platform_data],
-            title="💰 Revenue Attribution by Platform",
-            color_discrete_sequence=[DESIGN_SYSTEM['primary'], DESIGN_SYSTEM['primary_light'], DESIGN_SYSTEM['success']]
-        )
-        safe_plotly_chart(fig, use_container_width=True)
-    
-    with col2:
-        # ROAS comparison
-        fig = px.bar(
-            x=[p['Platform'] for p in platform_data],
-            y=[p['ROAS'] for p in platform_data],
-            title="🎯 ROAS by Platform",
-            color=[p['ROAS'] for p in platform_data],
-            color_continuous_scale=[DESIGN_SYSTEM['error'], DESIGN_SYSTEM['warning'], DESIGN_SYSTEM['success']]
-        )
-        fig.update_traces(texttemplate='%{y:.2f}x', textposition='outside')
-        safe_plotly_chart(fig, use_container_width=True)
+    # Charts for selected platforms
+    if len(platform_data) > 1:
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            fig = px.pie(
+                values=[p['Revenue'] for p in platform_data],
+                names=[p['Platform'] for p in platform_data],
+                title="💰 Revenue Attribution",
+                color_discrete_sequence=[DESIGN_SYSTEM['primary'], DESIGN_SYSTEM['primary_light'], DESIGN_SYSTEM['success']]
+            )
+            safe_plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            fig = px.bar(
+                x=[p['Platform'] for p in platform_data],
+                y=[p['ROAS'] for p in platform_data],
+                title="🎯 ROAS Comparison",
+                color=[p['ROAS'] for p in platform_data],
+                color_continuous_scale=[DESIGN_SYSTEM['error'], DESIGN_SYSTEM['warning'], DESIGN_SYSTEM['success']]
+            )
+            fig.update_traces(texttemplate='%{y:.2f}x', textposition='outside')
+            safe_plotly_chart(fig, use_container_width=True)
 
-def marketing_efficiency(df):
+def marketing_efficiency(df, selected_platforms):
     """Marketing Efficiency & ROAS Analysis"""
     st.markdown('<div class="section-header">🎯 Marketing Efficiency & ROAS</div>', unsafe_allow_html=True)
     
-    # Overall efficiency metrics
-    col1, col2, col3, col4 = st.columns(4)
+    if df.empty:
+        st.warning("No data available for the selected filters.")
+        return
     
-    total_spend = df['spend'].sum()
-    total_attributed = df['attributed revenue'].sum()
-    avg_attribution_rate = df['attribution_rate'].mean()
-    overall_roas = total_attributed / total_spend if total_spend > 0 else 0
+    st.info(f"📊 Efficiency data for: **{', '.join(selected_platforms)}**")
+    
+    kpis = calculate_kpis(df)
+    
+    col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         st.markdown(f'''
         <div class="metric-card">
             <div class="metric-label">💸 Total Marketing Spend</div>
-            <div class="metric-value">${total_spend:,.0f}</div>
-            <div class="metric-delta neutral">All Platforms</div>
+            <div class="metric-value">${kpis['total_spend']:,.0f}</div>
+            <div class="metric-delta neutral">Selected Platforms</div>
         </div>
         ''', unsafe_allow_html=True)
     
     with col2:
+        overall_roas = df['attributed revenue'].sum() / df['spend'].sum() if df['spend'].sum() > 0 else 0
         st.markdown(f'''
         <div class="metric-card">
             <div class="metric-label">📊 Overall ROAS</div>
@@ -993,6 +1092,7 @@ def marketing_efficiency(df):
         ''', unsafe_allow_html=True)
     
     with col3:
+        avg_attribution_rate = df['attribution_rate'].mean()
         st.markdown(f'''
         <div class="metric-card">
             <div class="metric-label">🔗 Attribution Rate</div>
@@ -1002,9 +1102,7 @@ def marketing_efficiency(df):
         ''', unsafe_allow_html=True)
     
     with col4:
-        total_clicks = df['clicks'].sum()
-        total_impressions = df['impression'].sum()
-        overall_ctr = (total_clicks / total_impressions * 100) if total_impressions > 0 else 0
+        overall_ctr = (df['clicks'].sum() / df['impression'].sum() * 100) if df['impression'].sum() > 0 else 0
         st.markdown(f'''
         <div class="metric-card">
             <div class="metric-label">👆 Overall CTR</div>
@@ -1013,7 +1111,6 @@ def marketing_efficiency(df):
         </div>
         ''', unsafe_allow_html=True)
     
-    # ROAS and Attribution trends
     col1, col2 = st.columns(2)
     
     with col1:
@@ -1021,7 +1118,7 @@ def marketing_efficiency(df):
             df,
             x='date',
             y='marketing_roas',
-            title='🎯 Daily Marketing ROAS Trend'
+            title=f'🎯 Daily ROAS Trend ({", ".join(selected_platforms)})'
         )
         fig.update_traces(line=dict(color=DESIGN_SYSTEM['primary'], width=3))
         safe_plotly_chart(fig, use_container_width=True)
@@ -1037,7 +1134,7 @@ def marketing_efficiency(df):
         safe_plotly_chart(fig, use_container_width=True)
 
 def main():
-    # Enhanced Header
+    # Header
     st.markdown(f"""
     <div class="dashboard-header">
         <div class="dashboard-title">📊 Marketing Intelligence Dashboard</div>
@@ -1050,17 +1147,25 @@ def main():
     if df is None:
         st.stop()
     
-    # Perfect Sidebar with enhanced date picker
+    # Functional sidebar
     date_range, platforms = render_sidebar(df)
     
-    # Filter data based on selections
+    # If no platforms selected, stop here
+    if not platforms:
+        st.warning("⚠️ Please select at least one platform to view analytics.")
+        st.stop()
+    
+    # Apply date filtering
     if len(date_range) == 2:
-        filtered_df = df[
+        date_filtered_df = df[
             (df['date'] >= pd.to_datetime(date_range[0])) & 
             (df['date'] <= pd.to_datetime(date_range[1]))
         ].copy()
     else:
-        filtered_df = df.copy()
+        date_filtered_df = df.copy()
+    
+    # Apply platform filtering
+    filtered_df = filter_data_by_platforms(date_filtered_df, platforms)
     
     # Navigation
     st.markdown("### 📋 Analytics Dashboard")
@@ -1080,17 +1185,17 @@ def main():
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Render selected view
+    # Render view with properly filtered data
     if selected_view == "📈 Executive Summary":
-        executive_summary(filtered_df)
+        executive_summary(filtered_df, platforms)
     elif selected_view == "💰 Revenue & Profitability":
         revenue_profitability(filtered_df, platforms)
     elif selected_view == "👥 Customer Acquisition":
         customer_acquisition_analysis(filtered_df)
     elif selected_view == "📱 Platform Performance":
-        platform_performance(filtered_df)
+        platform_performance(filtered_df, platforms)
     elif selected_view == "🎯 Marketing Efficiency":
-        marketing_efficiency(filtered_df)
+        marketing_efficiency(filtered_df, platforms)
 
 if __name__ == "__main__":
     main()
